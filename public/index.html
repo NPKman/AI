@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Command Charger Sent To RabbitMQ</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="card">
+        <h1>Command Charger Sent To RabbitMQ</h1>
+        <form id="commandForm" class="form">
+          <div class="form-row">
+            <label class="form-label" for="ipaddress">IP</label>
+            <input
+              id="ipaddress"
+              name="ipaddress"
+              type="text"
+              class="form-input"
+              placeholder="10.101.1.xxx"
+              required
+            />
+          </div>
+
+          <fieldset class="form-row">
+            <legend class="form-label">Command</legend>
+            <label class="radio-option">
+              <input type="radio" name="command" value="set_config" />
+              <span>set_config</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="command" value="get_config" checked />
+              <span>get_config</span>
+            </label>
+          </fieldset>
+
+          <div class="form-row">
+            <label class="form-label" for="key_name">Key name</label>
+            <select id="key_name" name="key_name" class="form-input"></select>
+          </div>
+
+          <div class="form-row">
+            <label class="form-label" for="key_value">key_value</label>
+            <div class="input-with-note">
+              <input
+                id="key_value"
+                name="key_value"
+                type="text"
+                class="form-input"
+                placeholder="ต้องระบุเมื่อเลือก set_config"
+                disabled
+              />
+              <small class="note">* ต้องระบุกรณีเลือก set_config</small>
+            </div>
+          </div>
+
+          <div class="form-row checkbox-row">
+            <label class="checkbox">
+              <input type="checkbox" id="customToggle" />
+              <span>Custom</span>
+            </label>
+          </div>
+
+          <div class="form-row textarea-row">
+            <label class="form-label" for="jsonOutput">JSON Preview</label>
+            <textarea
+              id="jsonOutput"
+              class="form-textarea"
+              rows="10"
+              readonly
+            ></textarea>
+            <small class="note">เมื่อเลือก Custom สามารถแก้ไข JSON ได้เอง แต่ต้องเป็นรูปแบบที่กำหนดด้านบน</small>
+          </div>
+
+          <div class="button-row">
+            <button type="button" id="copyJson" class="button secondary">คัดลอก JSON</button>
+            <button type="submit" class="button primary">ส่งคำสั่ง</button>
+          </div>
+        </form>
+        <div id="feedback" role="status" aria-live="polite" class="feedback"></div>
+      </section>
+    </main>
+    <script src="app.js" type="module"></script>
+  </body>
+</html>
