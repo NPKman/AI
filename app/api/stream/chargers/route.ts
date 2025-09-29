@@ -16,8 +16,8 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const stationId = Number(url.searchParams.get('stationId'));
 
-  if (!stationId) {
-    return NextResponse.json({ message: 'ต้องระบุ stationId' }, { status: 400 });
+  if (Number.isNaN(stationId)) {
+    return NextResponse.json({ message: 'ต้องระบุ stationId ที่ถูกต้อง' }, { status: 400 });
   }
 
   const encoder = new TextEncoder();
@@ -27,32 +27,42 @@ export async function GET(request: Request) {
       async function pushUpdate() {
         try {
           const sql = `
-          SELECT
-            cl.charger_point_name,
-            cl.ip_address,
-            cl.online,
-            cl.heartbeat_timestamp,
-            cl.charger_point_model,
-            cl.firmware_version,
-            cl.server_url,
-            cl.server_url2
-          FROM charger_list AS cl
-          INNER JOIN charger AS c ON cl.charger_id = c.charger_id
-          WHERE c.station_id = ?
-          ORDER BY cl.charger_point_name
-        `;
+            SELECT
+              cl.charger_point_name,
+              cl.ip_address,
+              cl.online,
+              cl.heartbeat_timestamp,
+              cl.charger_point_model,
+              cl.firmware_version,
+              cl.server_url,
+              cl.server_url2
+            FROM charger_list AS cl
+            INNER JOIN charger AS c ON cl.charger_id = c.charger_id
+            WHERE c.station_id = ?
+            ORDER BY cl.charger_point_name
+          `;
           const rows = await query<ChargerStatusRow>(sql, [stationId]);
           const payload = rows.map((row) => ({
             chargerPointName: row.charger_point_name,
             ipAddress: row.ip_address,
-            status: row.online === 1 ? 'ONLINE' : row.online === 0 ? 'OFFLINE' : 'UNKNOWN',
+            status:
+              row.online === 1
+                ? 'ONLINE'
+                : row.online === 0
+                  ? 'OFFLINE'
+                  : row.online == null
+                    ? 'UNKNOWN'
+                    : 'FAULT',
             lastTime: row.heartbeat_timestamp,
             model: row.charger_point_model,
             firmware: row.firmware_version,
             serverUrl1: row.server_url,
-            serverUrl2: row.server_url2
+            serverUrl2: row.server_url2,
           }));
-          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ chargers: payload })}\n\n`));
+
+          controller.enqueue(
+            encoder.encode(`data: ${JSON.stringify({ chargers: payload })}\n\n`)
+          );
         } catch (error) {
           console.error('SSE query error', error);
         }
@@ -60,9 +70,7 @@ export async function GET(request: Request) {
 
       await pushUpdate();
       const interval = setInterval(() => {
-        pushUpdate().catch((error) => {
-          console.error('SSE update error', error);
-        });
+        pushUpdate().catch((error) => console.error('SSE update error', error));
       }, 30000);
 
       const abortHandler = () => clearInterval(interval);
@@ -70,14 +78,14 @@ export async function GET(request: Request) {
     },
     cancel() {
       // handled by abort handler
-    }
+    },
   });
 
   return new Response(stream, {
     headers: {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache, no-transform',
-      Connection: 'keep-alive'
-    }
+      Connection: 'keep-alive',
+    },
   });
 }
