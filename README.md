@@ -5,11 +5,11 @@ A lightweight web interface for composing and publishing charger configuration c
 ## Getting Started
 
 1. Ensure the RabbitMQ Management API is reachable. By default the application targets:
-   - Host: `10.101.1.35`
+   - Host: `0.0.0.0`
    - Port: `15672`
-   - User: `administrator`
-   - Password: `EVEFT@tc`
-   - Exchange: `evmswss_command`
+   - User: `gust`
+   - Password: `gust`
+   - Exchange: `command`
    - VHost: `/`
 
    These can be overridden with environment variables (`RABBITMQ_HOST`, `RABBITMQ_HTTP_PORT`, `RABBITMQ_USER`, `RABBITMQ_PASSWORD`, `RABBITMQ_EXCHANGE`, `RABBITMQ_VHOST`).
