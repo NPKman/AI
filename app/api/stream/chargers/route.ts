@@ -45,7 +45,14 @@ export async function GET(request: Request) {
           const payload = rows.map((row) => ({
             chargerPointName: row.charger_point_name,
             ipAddress: row.ip_address,
-            status: row.online === 1 ? 'ONLINE' : row.online === 0 ? 'OFFLINE' : 'UNKNOWN',
+            status:
+              row.online === 1
+                ? 'ONLINE'
+                : row.online === 0
+                  ? 'OFFLINE'
+                  : row.online == null
+                    ? 'UNKNOWN'
+                    : 'FAULT',
             lastTime: row.heartbeat_timestamp,
             model: row.charger_point_model,
             firmware: row.firmware_version,

@@ -77,7 +77,14 @@ export async function GET(
     ipAddress: row.ip_address,
     serverUrl1: row.server_url,
     serverUrl2: row.server_url2,
-    status: row.online === 1 ? 'ONLINE' : row.online === 0 ? 'OFFLINE' : 'UNKNOWN',
+    status:
+      row.online === 1
+        ? 'ONLINE'
+        : row.online === 0
+          ? 'OFFLINE'
+          : row.online == null
+            ? 'UNKNOWN'
+            : 'FAULT',
     lastTime: row.heartbeat_timestamp,
     model: row.charger_point_model,
     firmware: row.firmware_version,

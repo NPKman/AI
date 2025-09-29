@@ -293,7 +293,13 @@ export default function StationDetailPage() {
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label>หมวดเฟิร์มแวร์</Label>
-              <Select value={firmwareOption} onValueChange={(value) => setFirmwareOption(value as FirmwareOption)}>
+              <Select
+                value={firmwareOption}
+                onValueChange={(value) => {
+                  setFirmwareOption(value as FirmwareOption);
+                  setFirmwareFile('');
+                }}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="เลือกหมวด" />
                 </SelectTrigger>
