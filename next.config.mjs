@@ -1,5 +1,8 @@
-import { config } from 'dotenv';
-config({ path: '.env.local' });
+import env from '@next/env';
+
+const { loadEnvConfig } = env;
+
+loadEnvConfig(process.cwd());
 
 const nextConfig = {
   experimental: {

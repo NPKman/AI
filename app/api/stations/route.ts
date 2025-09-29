@@ -20,6 +20,10 @@ export async function GET(request: Request) {
   const parsed = stationSearchSchema.parse(params);
   const { q, province, status, stationType, page, pageSize } = parsed;
 
+  const normalizedPageSize = Math.max(1, Math.min(100, Math.trunc(pageSize)));
+  const normalizedPage = Math.max(1, Math.trunc(page));
+  const offset = (normalizedPage - 1) * normalizedPageSize;
+
   const where: string[] = [];
   const whereParams: (string | number)[] = [];
 
@@ -63,10 +67,10 @@ export async function GET(request: Request) {
     GROUP BY s.station_id, ec_id, station_name, p.province_name_th, p.province_name_en, station_type
     ${havingClause}
     ORDER BY station_name
-    LIMIT ? OFFSET ?
+    LIMIT ${normalizedPageSize} OFFSET ${offset}
   `;
 
-  const rows = await query<StationRow>(listQuery, [...whereParams, ...havingParams, pageSize, (page - 1) * pageSize]);
+  const rows = await query<StationRow>(listQuery, [...whereParams, ...havingParams]);
 
   const countQuery = `
     SELECT COUNT(*) AS total
