@@ -99,14 +99,20 @@ export default function StationsPage() {
           <div>
             <Label>สถานะชาร์จเจอร์</Label>
             <Select
-              value={filters.status ?? ''}
-              onValueChange={(value) => form.setValue('status', value ? (value as 'ONLINE' | 'OFFLINE') : undefined, { shouldDirty: true })}
+              value={filters.status ?? 'ALL'}
+              onValueChange={(value) =>
+                form.setValue(
+                  'status',
+                  value === 'ALL' ? undefined : (value as 'ONLINE' | 'OFFLINE'),
+                  { shouldDirty: true }
+                )
+              }
             >
               <SelectTrigger>
                 <SelectValue placeholder="ทั้งหมด" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">ทั้งหมด</SelectItem>
+                <SelectItem value="ALL">ทั้งหมด</SelectItem>
                 <SelectItem value="ONLINE">Online</SelectItem>
                 <SelectItem value="OFFLINE">Offline</SelectItem>
               </SelectContent>
