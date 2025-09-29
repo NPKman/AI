@@ -59,11 +59,18 @@ MYSQL_TIMEZONE=Asia/Bangkok
 ตั้งค่าตัวแปรสภาพแวดล้อม:
 
 ```env
+# RabbitMQ (ใช้ RABBIT_URL ก่อน, ถ้าไม่ตั้ง ให้ประกอบจาก HOST/PARAMS)
+# แบบรวมเดียว (ถ้ามีจะถูกใช้ก่อน)
+RABBIT_URL=
+
+# แบบแยกส่วน (จะถูกใช้เมื่อ RABBIT_URL ว่าง)
 RABBIT_HOST=host
 RABBIT_PORT=5672
 RABBIT_USER=user
 RABBIT_PASSWORD=pass
 RABBIT_VHOST=vhost
+
+# Exchange settings
 RABBIT_EXCHANGE=evmswss_command
 RABBIT_EXCHANGE_TYPE=fanout
 RABBIT_ROUTING_KEY=

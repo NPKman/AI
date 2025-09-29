@@ -11,8 +11,9 @@ export function getRabbitChannel() {
       RABBIT_PASSWORD,
       RABBIT_VHOST,
       RABBIT_EXCHANGE,
-      RABBIT_EXCHANGE_TYPE
+      RABBIT_EXCHANGE_TYPE,
     } = process.env;
+
     if (!RABBIT_HOST || !RABBIT_USER || !RABBIT_PASSWORD || !RABBIT_EXCHANGE || !RABBIT_EXCHANGE_TYPE) {
       throw new Error('RabbitMQ environment variables are not fully defined');
     }
@@ -22,18 +23,22 @@ export function getRabbitChannel() {
       if (Number.isNaN(port)) {
         throw new Error('RabbitMQ port must be a valid number');
       }
+
       const connection = await amqp.connect({
         protocol: 'amqp',
         hostname: RABBIT_HOST,
         port,
         username: RABBIT_USER,
         password: RABBIT_PASSWORD,
-        vhost: RABBIT_VHOST ?? '/'
+        vhost: RABBIT_VHOST ?? '/',
       });
+
       const channel = await connection.createChannel();
-      await channel.assertExchange(RABBIT_EXCHANGE, RABBIT_EXCHANGE_TYPE as amqp.Options.AssertExchange['type'], {
-        durable: true
-      });
+      await channel.assertExchange(
+        RABBIT_EXCHANGE,
+        RABBIT_EXCHANGE_TYPE as amqp.Options.AssertExchange['type'],
+        { durable: true },
+      );
       return channel;
     })();
   }
@@ -45,14 +50,17 @@ export async function publishJson(payload: unknown) {
   if (!RABBIT_EXCHANGE) {
     throw new Error('RabbitMQ exchange is not defined');
   }
+
   const channel = await getRabbitChannel();
   const content = Buffer.from(JSON.stringify(payload));
-  const routingKey = RABBIT_ROUTING_KEY ?? '';
-  const published = channel.publish(RABBIT_EXCHANGE, routingKey, content, {
+  const routingKey = RABBIT_ROUTING_KEY ?? ''; // fanout: ปล่อยว่าง
+
+  const ok = channel.publish(RABBIT_EXCHANGE, routingKey, content, {
     contentType: 'application/json',
-    persistent: true
+    persistent: true,
   });
-  if (!published) {
+
+  if (!ok) {
     throw new Error('ไม่สามารถส่งคำสั่งไปยัง RabbitMQ ได้');
   }
 }

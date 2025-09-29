@@ -331,7 +331,7 @@ export default function StationDetailPage() {
               ยกเลิก
             </Button>
             <Button onClick={handleFirmwareSubmit} disabled={isSubmitting}>
-              {isSubmitting ? 'กำลังส่ง...' : 'ยืนยัน' }
+              {isSubmitting ? 'กำลังส่ง...' : 'ยืนยัน'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -349,7 +349,7 @@ export default function StationDetailPage() {
               ยกเลิก
             </Button>
             <Button onClick={handleConfigSubmit} disabled={isSubmitting}>
-              {isSubmitting ? 'กำลังส่ง...' : 'ยืนยัน' }
+              {isSubmitting ? 'กำลังส่ง...' : 'ยืนยัน'}
             </Button>
           </DialogFooter>
         </DialogContent>

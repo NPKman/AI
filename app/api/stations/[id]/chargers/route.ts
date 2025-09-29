@@ -68,10 +68,11 @@ export async function GET(
     provinceTh: rows[0].province_name_th,
     provinceEn: rows[0].province_name_en,
     stationType: rows[0].station_type,
-    chargerCount: rows.length
+    chargerCount: rows.length,
   };
 
   const chargers = rows.map((row, index) => ({
+    // แนะนำ: ถ้ามี unique key จริง ให้ใช้แทน index
     chargerId: index,
     chargerPointName: row.charger_point_name,
     ipAddress: row.ip_address,
@@ -89,7 +90,7 @@ export async function GET(
     model: row.charger_point_model,
     firmware: row.firmware_version,
     ocppVersion: row.ocpp_version,
-    connectorCount: row.connector_count
+    connectorCount: row.connector_count,
   }));
 
   return NextResponse.json({ station, chargers });
