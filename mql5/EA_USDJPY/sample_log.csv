@@ -1,0 +1,6 @@
+timestamp,event,message,extra
+2024-03-01 08:00:01,INFO,Init,Starting EA
+2024-03-01 09:15:02,INFO,Signal,Trade executed|REGIME_TREND
+2024-03-01 10:45:00,WARN,RiskManager,Daily loss cap reached|2.10
+2024-03-01 12:30:11,INFO,Tester,Average R:R|1.35
+2024-03-01 18:59:00,ERROR,TradeManager,Order send failed|4756
